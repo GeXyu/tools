@@ -1,4 +1,4 @@
-package cn.xiuyu.response;
+package cn.xiuyu.repository;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;

@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import cn.xiuyu.annotation.Delete;
 import cn.xiuyu.annotation.Query;
 import cn.xiuyu.annotation.Updata;
-import cn.xiuyu.response.CurdResponse;
-import cn.xiuyu.response.Response;
+import cn.xiuyu.repository.CurdRepository;
+import cn.xiuyu.repository.Repository;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -25,7 +25,7 @@ public class ResponseFactory implements MethodInterceptor{
 		return instance;
 	}
 	private static boolean status = true;
-	CurdResponse response;
+	CurdRepository response;
 	Class clazz;
 	Map<String,String> maps = new HashMap<String,String>();
 	private Class entityClazz;
@@ -33,7 +33,7 @@ public class ResponseFactory implements MethodInterceptor{
 	public <T> T createResponse(Class clazz,Class entityClazz){
 		this.clazz = clazz;
 		this.entityClazz = entityClazz;
-		if(Response.class.isAssignableFrom(clazz)){
+		if(Repository.class.isAssignableFrom(clazz)){
 			if(status){
 				//执行初始化方法
 				initMethod(clazz,entityClazz);
@@ -50,7 +50,7 @@ public class ResponseFactory implements MethodInterceptor{
 	}
 
 	private void initMethod(Class clazz,Class entityClazz) {
-		response = new CurdResponse(entityClazz);
+		response = new CurdRepository(entityClazz);
 		Method[] methods = clazz.getMethods();
 		//获取所有带注解的method
 		for(Method m:methods){

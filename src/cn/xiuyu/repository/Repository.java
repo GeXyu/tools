@@ -1,4 +1,4 @@
-package cn.xiuyu.response;
+package cn.xiuyu.repository;
 
 import java.sql.SQLException;
 
