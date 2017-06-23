@@ -91,7 +91,7 @@ public class SqlHelper<T> {
 		
 		return sql;
 	}
-	
+	//构建查询语句
 	public String QuerySql(int id){
 		beanList = getfieldTolist(clazz);
 		String prefix = "select ";
@@ -113,7 +113,7 @@ public class SqlHelper<T> {
 	public String DeleteSql(int id){
 		return "delete from "+ entityName  + " where id = " + id+" ;";
 	}
-	
+	//构建更新语句
 	public String UpdateSql(T t){
 		String prefix = "update " + entityName ;
 		String suffix = " where id=";
@@ -148,6 +148,8 @@ public class SqlHelper<T> {
 		String sql = prefix + suffix + ";";
 		return sql;
 	}
+	
+	//把值设置到实体
 	public T setEntity(ResultSet rs) throws InstantiationException, IllegalAccessException, SQLException{
 		Object ojb =  clazz.newInstance();
 		Field[] fields = ojb.getClass().getDeclaredFields();
@@ -161,5 +163,44 @@ public class SqlHelper<T> {
 			}
 		}
 		return (T) ojb;
+	}
+	
+	//把值设置到实体
+		public List<T> setList(ResultSet rs) throws InstantiationException, IllegalAccessException, SQLException{
+			List<T> lists = new ArrayList<T>();
+			Field[] fields = clazz.getDeclaredFields();
+			
+			while(rs.next()){
+				Object ojb =  clazz.newInstance();
+				for(Field f:fields){
+					f.setAccessible(true);
+					String name = f.getName();
+					String value = rs.getString(name);
+					f.set(ojb, value);	
+				}
+				lists.add((T)ojb);
+			}
+			return lists;
+		}
+	
+	//构造count语句
+	public String CountSql(){
+		return "select count(1) from " + entityName + " ; ";
+	}
+	
+	//构造查询前缀
+	public String makeprefix(){
+		beanList = getfieldTolist(clazz);
+		String prefix = "select ";
+		int size = beanList.size();
+		for(int i=0; i<size; i++){
+			if(i == (size-1)){
+				//说明是最后一一个
+				prefix = prefix +  beanList.get(i) + " ";
+			}else{
+				prefix = prefix + beanList.get(i) + ", ";
+			}
+		}
+		return prefix;
 	}
 }
